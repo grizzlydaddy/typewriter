@@ -1,24 +1,16 @@
-import webpack from 'webpack';
-import package from './package.json';
-var banner = `
-  ${package.name} - ${package.description}
-  Author: ${package.author}
-  Version: v${package.version}
-  Url: ${package.homepage}
-  License(s): ${package.license}
-`;
+const path = require('path');
 
-export default {
-  entry: {
-    Typed: './src/typewriter.js'
-  },
+module.exports = {
+  entry: './src/typewriter.js',
   output: {
-    path: __dirname,
+    path: path.resolve(__dirname, 'lib/'),
     library: 'Typewriter',
+    filename: 'typewriter.js',
     libraryTarget: 'umd',
-    filename: `typewriter.js`
+    libraryExport: 'default',
+    sourceMapFilename: '../maps/typewriter.js.map'
   },
-  devtool: '#inline-source-map',
+  devtool: "source-map",
   externals: [
     {
       lodash: {
@@ -30,18 +22,14 @@ export default {
     }
   ],
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel',
-        query: {
-          compact: false
-        }
+        use: ['babel-loader']
       }
     ]
   },
   plugins: [
-    new webpack.BannerPlugin(banner)
   ]
 };

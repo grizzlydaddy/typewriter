@@ -5,7 +5,9 @@
   "main": "typewriter.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack"
+    "dev": "webpack --mode development --watch",
+    "build": "webpack --mode production",
+    "start": "webpack-dev-server"
   },
   "repository": {
     "type": "git",
@@ -23,6 +25,9 @@
   },
   "homepage": "https://github.com/grizzlydaddy/typewriter#readme",
   "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.6.1",
     "webpack": "^4.1.1",
     "webpack-cli": "^2.0.11"
   },

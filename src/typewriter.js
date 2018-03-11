@@ -79,6 +79,54 @@
 //
 // }));
 
-
 export default class Typewriter {
+
+  constructor(params) {
+    this.target = params.target;
+    this.cursor = params.cursor;
+    this.speed = params.speed;
+    this.fixePosition = params.fixePosition;
+    this.text = params.text || '';
+    this.writingSequences = this.setText();
+
+    this.typeit();
+  }
+
+  setText(){
+    return Array.prototype.map.call( document.querySelectorAll( this.target ), e => {
+      return {
+        target: e,
+        text: [...e.dataset.typeit] || [...this.text]
+      };
+    });
+  }
+
+  typeit(){
+
+    // function typeLetter() {
+    //   setTimeout( () => {
+    //     var t = sequence.target.appendChild( document.createTextNode('test') );
+    //     if( sequence.text.length ){
+    //       sequence.target[0].childNodes[0].replaceWith( sequence.target[0].childNodes[0].wholeText + sequence.text.shift() );
+    //       this.typeit();
+    //     } else {
+    //       // sequence.target.find('.typeme-cursor').addClass('finished');
+    //     }
+    //   }, ( / /.test(sequence.text[0]) ) ? 0 : this.speed + Math.floor(Math.random() * Math.floor(40) ) );
+    // }
+
+    let typeLetters = ( text, textNode ) => {
+      setTimeout( () => {
+        if( text.length ) {
+          textNode.nodeValue = textNode.wholeText + text.shift();
+          typeLetters( text, textNode );
+        }
+      }, ( / /.test(text[0]) ) ? 0 : this.speed + Math.floor(Math.random() * Math.floor(40) ) );
+    }
+
+    this.writingSequences.forEach( sequence => {
+      let textNode = sequence.target.appendChild( document.createTextNode('') );
+      typeLetters( sequence.text, textNode );
+    });
+  }
 }
