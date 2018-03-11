@@ -1,14 +1,15 @@
 {
-  "name": "writeme",
+  "name": "typewriter",
   "version": "1.0.0",
   "description": "Typing animations",
-  "main": "writeme.js",
+  "main": "typewriter.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/grizzlydaddy/writeme.git"
+    "url": "git+https://github.com/grizzlydaddy/typewriter.git"
   },
   "keywords": [
     "Typing",
@@ -18,7 +19,12 @@
   "author": "mgrisole",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/grizzlydaddy/writeme/issues"
+    "url": "https://github.com/grizzlydaddy/typewriter/issues"
   },
-  "homepage": "https://github.com/grizzlydaddy/writeme#readme"
+  "homepage": "https://github.com/grizzlydaddy/typewriter#readme",
+  "devDependencies": {
+    "webpack": "^4.1.1",
+    "webpack-cli": "^2.0.11"
+  },
+  "dependencies": {}
 }
