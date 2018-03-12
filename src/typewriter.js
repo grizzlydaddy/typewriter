@@ -92,7 +92,7 @@ export default class Typewriter {
     this.typeit();
   }
 
-  setText(){
+  setText() {
     return Array.prototype.map.call( document.querySelectorAll( this.target ), e => {
       return {
         target: e,
@@ -101,32 +101,56 @@ export default class Typewriter {
     });
   }
 
-  typeit(){
+  setCursor( target ) {
+    if ( this.cursor ) {
 
-    // function typeLetter() {
-    //   setTimeout( () => {
-    //     var t = sequence.target.appendChild( document.createTextNode('test') );
-    //     if( sequence.text.length ){
-    //       sequence.target[0].childNodes[0].replaceWith( sequence.target[0].childNodes[0].wholeText + sequence.text.shift() );
-    //       this.typeit();
-    //     } else {
-    //       // sequence.target.find('.typeme-cursor').addClass('finished');
-    //     }
-    //   }, ( / /.test(sequence.text[0]) ) ? 0 : this.speed + Math.floor(Math.random() * Math.floor(40) ) );
-    // }
+      let cursorStyle = `
+          @keyframes blink {
+            0% {
+              opacity: 1 }
+            50% {
+              opacity: 0 }
+            100% {
+              opacity: 1 }
+          }
 
-    let typeLetters = ( text, textNode ) => {
+          .typewriter-cursor.end {
+            opacity: 1;
+            animation: blink .7s infinite;
+          }`;
+
+      let style = document.head.appendChild( document.createElement('style') );
+      style.type = 'text/css';
+      style.appendChild( document.createTextNode(cursorStyle) );
+      console.log( style );
+
+      let cursor = target.appendChild( document.createElement('span') );
+      cursor.textContent = this.cursor;
+      cursor.className = 'typewriter-cursor';
+      return cursor;
+    } else {
+      return;
+    }
+  }
+
+  typeit() {
+
+    let typeLetters = ( sequence ) => {
       setTimeout( () => {
-        if( text.length ) {
-          textNode.nodeValue = textNode.wholeText + text.shift();
-          typeLetters( text, textNode );
+        if( sequence.text.length ) {
+          sequence.textNode.nodeValue += sequence.text.shift();
+          typeLetters( sequence );
+        } else if ( sequence.cursor ){
+          sequence.cursor.className += ' end';
         }
-      }, ( / /.test(text[0]) ) ? 0 : this.speed + Math.floor(Math.random() * Math.floor(40) ) );
+      }, ( / /.test(sequence.text[0]) ) ? 0 : this.speed + Math.floor(Math.random() * Math.floor(40) ) );
     }
 
     this.writingSequences.forEach( sequence => {
-      let textNode = sequence.target.appendChild( document.createTextNode('') );
-      typeLetters( sequence.text, textNode );
+      sequence.textNode = sequence.target.appendChild( document.createTextNode('') );
+      sequence.cursor = this.setCursor( sequence.target );
+      typeLetters( sequence );
     });
   }
 }
+{{}}
