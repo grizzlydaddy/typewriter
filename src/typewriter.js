@@ -84,10 +84,12 @@ export default class Typewriter {
   constructor(params) {
     this.target = params.target;
     this.cursor = params.cursor;
-    this.speed = params.speed;
+    this.speed = params.speed / 2;
+    this.humanize = params.humanize === undefined ? true : params.humanize;
     this.fixePosition = params.fixePosition;
-    this.text = params.text || '';
+    this.text = params.text === undefined ? '' : params.text;
     this.writingSequences = this.setText();
+    this.ignoreWhitespace = params.ignoreWhitespace === undefined ? false : params.ignoreWhitespace;
 
     this.typeit();
   }
@@ -135,15 +137,21 @@ export default class Typewriter {
 
   typeit() {
 
-    let typeLetters = ( sequence ) => {
+    let typeLetters = ( sequence, speed = this.speed ) => {
+      if( this.humanize ){
+        speed = Math.abs(Math.random() * this.speed + this.speed/2);
+        speed = Math.round( speed ) % 2 && speed > this.speed / 0.25 ? this.speed / 2 : speed;
+        console.log( speed )
+      }
       setTimeout( () => {
         if( sequence.text.length ) {
           sequence.textNode.nodeValue += sequence.text.shift();
-          typeLetters( sequence );
+          typeLetters( sequence, speed );
         } else if ( sequence.cursor ){
           sequence.cursor.className += ' end';
         }
-      }, ( / /.test(sequence.text[0]) ) ? 0 : this.speed + Math.floor(Math.random() * Math.floor(40) ) );
+        console.log( this.ignoreWhitespace && /\s/.test(sequence.text[0]) )
+      }, this.ignoreWhitespace && /\s/.test(sequence.text[0]) ? 0 : speed );
     }
 
     this.writingSequences.forEach( sequence => {
