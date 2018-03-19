@@ -88,14 +88,16 @@ export default class Typewriter {
     this.humanize = params.humanize === undefined ? true : params.humanize;
     this.fixePosition = params.fixePosition;
     this.text = params.text === undefined ? '' : params.text;
-    this.writingSequences = this.setText();
     this.ignoreWhitespace = params.ignoreWhitespace === undefined ? false : params.ignoreWhitespace;
+    this.synchroniseCursors = params.synchroniseCursors === undefined ? true : params.synchroniseCursors;
+    this.writingSequences = this.setText();
 
     this.typeit();
   }
 
   setText() {
     return Array.prototype.map.call( document.querySelectorAll( this.target ), e => {
+      console.log(this);
       return {
         target: e,
         text: [...e.dataset.typeit] || [...this.text]
@@ -124,7 +126,6 @@ export default class Typewriter {
       let style = document.head.appendChild( document.createElement('style') );
       style.type = 'text/css';
       style.appendChild( document.createTextNode(cursorStyle) );
-      console.log( style );
 
       let cursor = target.appendChild( document.createElement('span') );
       cursor.textContent = this.cursor;
@@ -141,16 +142,21 @@ export default class Typewriter {
       if( this.humanize ){
         speed = Math.abs(Math.random() * this.speed + this.speed/2);
         speed = Math.round( speed ) % 2 && speed > this.speed / 0.25 ? this.speed / 2 : speed;
-        console.log( speed )
       }
       setTimeout( () => {
         if( sequence.text.length ) {
           sequence.textNode.nodeValue += sequence.text.shift();
           typeLetters( sequence, speed );
         } else if ( sequence.cursor ){
-          sequence.cursor.className += ' end';
+          sequence.cursor.classList.add('end');
+          if( this.synchroniseCursors ){
+            document.querySelectorAll('.typewriter-cursor').forEach( e => {
+              e.style.animation = 'none'
+              e.offsetHeight;
+              e.style.animation = null
+            });
+          }
         }
-        console.log( this.ignoreWhitespace && /\s/.test(sequence.text[0]) )
       }, this.ignoreWhitespace && /\s/.test(sequence.text[0]) ? 0 : speed );
     }
 
