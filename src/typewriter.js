@@ -11,8 +11,6 @@ export default class Typewriter {
     this.synchroniseCursors = params.synchroniseCursors === undefined ? true : params.synchroniseCursors;
     this.writingSequences = this.setText();
 
-    console.log( this.writingSequences );
-
     this.typeit();
   }
 
@@ -81,6 +79,7 @@ export default class Typewriter {
     }
 
     this.writingSequences.forEach( sequence => {
+      sequence.target.innerText = null;
       sequence.textNode = sequence.target.appendChild( document.createTextNode('') );
       sequence.cursor = this.setCursor( sequence.target );
       typeLetters( sequence );
