@@ -1,15 +1,33 @@
 export default class Typewriter {
 
+  const keyboard = {
+    azerty: [
+      [...'azertyuiop'],
+      [...'qsdfghjklm'],
+      [...'wxcvbn']
+    ],
+    qwerty: [
+      [...'qwertyuiop'],
+      [...'asdfghjklz'],
+      [...'xcvbnm']
+    ]
+  };
+
   constructor(params) {
     this.target = params.target;
     this.cursor = params.cursor;
     this.speed = params.speed / 2;
     this.humanize = params.humanize === undefined ? true : params.humanize;
+    this.mistype = params.mistype === undefined ? false : params.mistype;
+    this.mistypeRate = params.mistype === undefined ? 10 : params.mistypeRate;
     this.fixePosition = params.fixePosition;
     this.text = params.text;
     this.ignoreWhitespace = params.ignoreWhitespace === undefined ? false : params.ignoreWhitespace;
     this.synchroniseCursors = params.synchroniseCursors === undefined ? true : params.synchroniseCursors;
     this.writingSequences = this.setText();
+
+
+    console.log( this.writingSequences );
 
     this.typeit();
   }
@@ -60,6 +78,14 @@ export default class Typewriter {
       if( this.humanize ){
         speed = Math.abs(Math.random() * this.speed + this.speed/2);
         speed = Math.round( speed ) % 2 && speed > this.speed / 0.25 ? this.speed / 2 : speed;
+      }
+      if( this.mistype ){
+        if( this.mistypeRate > Math.random() * 100 ){
+          let trueChar = sequence.text.shift();
+          if( !isNaN(parseInt(trueChar)) ){
+
+          }
+        }
       }
       setTimeout( () => {
         if( sequence.text.length ) {
