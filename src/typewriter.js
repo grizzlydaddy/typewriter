@@ -69,7 +69,7 @@ export default class Typewriter {
     let trueChar = /\s/.test(sequence.text[0]) ? null : sequence.text.shift();
     let wrongChar = trueChar;
     if ( trueChar ) {
-      if ( new RegExp( '[' + this.keyboard.join('') + this.keyboard.join('').toUpperCase() + ']' ).test( trueChar ) ) {
+      if ( new RegExp( '[' + this.keyboard.join('') + this.keyboard.join('').toUpperCase() + ']' ).test(trueChar) ) {
         let keyboardLine = this.keyboard.filter( e => { return new RegExp('['+ e + e.toUpperCase() +']').test(trueChar) });
         if ( keyboardLine.length ) {
           keyboardLine = keyboardLine[0];
