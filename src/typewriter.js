@@ -67,17 +67,22 @@ export default class Typewriter {
 
   misstype (sequence) {
     let trueChar = /\s/.test(sequence.text[0]) ? null : sequence.text.shift();
-    let wrongChar = trueChar;
     if ( trueChar ) {
-      if ( new RegExp( '[' + this.keyboard.join('') + this.keyboard.join('').toUpperCase() + ']' ).test(trueChar) ) {
-        let keyboardLine = this.keyboard.filter( e => { return new RegExp('['+ e + e.toUpperCase() +']').test(trueChar) });
+      let isUpperCase = trueChar === trueChar.toUpperCase();
+      trueChar = trueChar.toLowerCase();
+      let wrongChar = trueChar;
+      if ( new RegExp( '[' + this.keyboard.join('') + ']' ).test(trueChar) ) {
+        let keyboardLine = this.keyboard.filter( e => { return new RegExp('['+ e +']').test(trueChar) });
         if ( keyboardLine.length ) {
           keyboardLine = keyboardLine[0];
           let keyboardLinePosition = this.keyboard.indexOf(keyboardLine);
-          let siblingLine = this.keyboard[keyboardLinePosition + (keyboardLinePosition === 0 ? 1 : -1 )];
-          let letterPosition = [...keyboardLine].indexOf(trueChar);
+          // let siblingLine = this.keyboard[keyboardLinePosition + (keyboardLinePosition === 0 ? 1 : -1 )];
+          let letterPosition = keyboardLine.indexOf(trueChar.toLowerCase());
+          console.log(keyboardLine);
+          console.log(letterPosition);
           console.log(trueChar);
-          console.log( siblingLine );
+          // console.log( siblingLine );
+          wrongChar = ((!letterPosition||letterPosition+1 === keyboardLine.length) ? keyboardLine[ letterPosition + (letterPosition ? -1:1)] : keyboardLine[letterPosition + (parseInt(Math.random()*100 % 2) ? 1 : -1)] );
 
           // if ( letterPosition === 0 ) {
           //   if ( keyboardLinePosition === 0) {
