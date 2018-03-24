@@ -1,17 +1,9 @@
-export default class Typewriter {
+let keyboards = {
+  azerty: ['azertyuiop', 'qsdfghjklm', 'wxcvbn'],
+  qwerty: ['qwertyuiop', 'asdfghjklz', 'xcvbnm']
+};
 
-  const keyboard = {
-    azerty: [
-      [...'azertyuiop'],
-      [...'qsdfghjklm'],
-      [...'wxcvbn']
-    ],
-    qwerty: [
-      [...'qwertyuiop'],
-      [...'asdfghjklz'],
-      [...'xcvbnm']
-    ]
-  };
+export default class Typewriter {
 
   constructor(params) {
     this.target = params.target;
@@ -20,19 +12,17 @@ export default class Typewriter {
     this.humanize = params.humanize === undefined ? true : params.humanize;
     this.mistype = params.mistype === undefined ? false : params.mistype;
     this.mistypeRate = params.mistype === undefined ? 10 : params.mistypeRate;
+    this.keyboard = params.keyboard === undefined ? keyboards['qwerty'] : keyboards[params.keyboard];
     this.fixePosition = params.fixePosition;
     this.text = params.text;
     this.ignoreWhitespace = params.ignoreWhitespace === undefined ? false : params.ignoreWhitespace;
     this.synchroniseCursors = params.synchroniseCursors === undefined ? true : params.synchroniseCursors;
     this.writingSequences = this.setText();
 
-
-    console.log( this.writingSequences );
-
     this.typeit();
   }
 
-  setText() {
+  setText () {
     return Array.from( document.querySelectorAll( '.typeMe'), e => {
       return {
         target: e,
@@ -41,7 +31,7 @@ export default class Typewriter {
     })
   }
 
-  setCursor( target ) {
+  setCursor (target) {
     if ( this.cursor ) {
 
       let cursorStyle = `
@@ -72,43 +62,67 @@ export default class Typewriter {
     }
   }
 
-  typeit() {
+  backspace (sequence) {
+  }
 
-    let typeLetters = ( sequence, speed = this.speed ) => {
-      if( this.humanize ){
-        speed = Math.abs(Math.random() * this.speed + this.speed/2);
-        speed = Math.round( speed ) % 2 && speed > this.speed / 0.25 ? this.speed / 2 : speed;
-      }
-      if( this.mistype ){
-        if( this.mistypeRate > Math.random() * 100 ){
-          let trueChar = sequence.text.shift();
-          if( !isNaN(parseInt(trueChar)) ){
+  misstype (sequence) {
+    let trueChar = /\s/.test(sequence.text[0]) ? null : sequence.text.shift();
+    let wrongChar = trueChar;
+    if ( trueChar ) {
+      if ( new RegExp( '[' + this.keyboard.join('') + this.keyboard.join('').toUpperCase() + ']' ).test( trueChar ) ) {
+        let keyboardLine = this.keyboard.filter( e => { return new RegExp('['+ e + e.toUpperCase() +']').test(trueChar) });
+        if ( keyboardLine.length ) {
+          keyboardLine = keyboardLine[0];
+          let letterPosition = [...keyboardLine].indexOf(trueChar);
+          if ( letterPosition === 0 ) {
+            wrongChar = '&'
+            if (this.keyboard.indexOf(keyboardLine) === 0) {
 
+            }
+          } else {
+            wrongChar = 'w';
           }
         }
+      } else if ( !isNaN(parseInt(trueChar)) ) {
+        console.log(54);
       }
-      setTimeout( () => {
-        if( sequence.text.length ) {
-          sequence.textNode.nodeValue += sequence.text.shift();
-          typeLetters( sequence, speed );
-        } else if ( sequence.cursor ){
-          sequence.cursor.classList.add('end');
-          if( this.synchroniseCursors ){
-            document.querySelectorAll('.typewriter-cursor').forEach( e => {
-              e.style.animation = 'none'
-              e.offsetHeight;
-              e.style.animation = null
-            });
-          }
-        }
-      }, this.ignoreWhitespace && /\s/.test(sequence.text[0]) ? 0 : speed );
+      sequence.text.unshift(wrongChar);
     }
+  }
 
+  typeLetters (sequence, speed = this.speed) {
+    if ( this.humanize ) {
+      speed = Math.abs(Math.random() * this.speed + this.speed/2);
+      speed = Math.round(speed) % 2 && speed > this.speed / 0.25 ? this.speed / 2 : speed;
+    }
+    let rand = Math.random() * 100;
+    // console.log( rand );
+    if ( this.mistype && this.mistypeRate > rand ) {
+      this.misstype(sequence);
+    }
+    setTimeout( () => {
+      if ( sequence.text.length ) {
+        sequence.textNode.nodeValue += sequence.text.shift();
+        this.typeLetters( sequence, speed );
+      } else if ( sequence.cursor ) {
+        sequence.cursor.classList.add('end');
+        if ( this.synchroniseCursors ) {
+          document.querySelectorAll('.typewriter-cursor').forEach( e => {
+            e.style.animation = 'none'
+            e.offsetHeight;
+            e.style.animation = null
+          });
+        }
+      }
+    }, this.ignoreWhitespace && /\s/.test(sequence.text[0]) ? 0 : speed );
+  }
+
+  typeit() {
     this.writingSequences.forEach( sequence => {
       sequence.target.innerText = null;
       sequence.textNode = sequence.target.appendChild( document.createTextNode('') );
       sequence.cursor = this.setCursor( sequence.target );
-      typeLetters( sequence );
+      this.typeLetters( sequence );
     });
   }
 }
