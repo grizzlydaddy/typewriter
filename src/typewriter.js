@@ -73,15 +73,19 @@ export default class Typewriter {
         let keyboardLine = this.keyboard.filter( e => { return new RegExp('['+ e + e.toUpperCase() +']').test(trueChar) });
         if ( keyboardLine.length ) {
           keyboardLine = keyboardLine[0];
+          let keyboardLinePosition = this.keyboard.indexOf(keyboardLine);
+          let siblingLine = this.keyboard[keyboardLinePosition + (keyboardLinePosition === 0 ? 1 : -1 )];
           let letterPosition = [...keyboardLine].indexOf(trueChar);
-          if ( letterPosition === 0 ) {
-            wrongChar = '&'
-            if (this.keyboard.indexOf(keyboardLine) === 0) {
+          console.log(trueChar);
+          console.log( siblingLine );
 
-            }
-          } else {
-            wrongChar = 'w';
-          }
+          // if ( letterPosition === 0 ) {
+          //   if ( keyboardLinePosition === 0) {
+          //     wrongChar = parseInt(Math.random()*100) % 2 && this.keyboard[keyboardLinePosition+1] ? this.keyboard[keyboardLinePosition+1][0] : keyboardLine[1];
+          //   }
+          // } else {
+          //   wrongChar = 'w';
+          // }
         }
       } else if ( !isNaN(parseInt(trueChar)) ) {
         console.log(54);
