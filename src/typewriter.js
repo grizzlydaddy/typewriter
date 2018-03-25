@@ -37,16 +37,18 @@ export default class Typewriter {
       let cursorStyle = `
           @keyframes blink {
             0% {
-              opacity: 1 }
+              opacity: 0 }
             50% {
               opacity: 0 }
+            50.01% {
+              opacity: 1 }
             100% {
               opacity: 1 }
           }
 
           .typewriter-cursor.end {
             opacity: 1;
-            animation: blink .7s infinite;
+            animation: blink 1.2s infinite;
           }`;
 
       let style = document.head.appendChild( document.createElement('style') );
@@ -62,9 +64,24 @@ export default class Typewriter {
     }
   }
 
-  backspace (sequence) {
-    // console.log(sequence.text);
-    // sequence.textNode.nodeValue += sequence.text.shift();
+  blinkCursor ( sequence ) {
+    sequence.cursor.classList.add('end');
+    if ( this.synchroniseCursors ) {
+      document.querySelectorAll('.typewriter-cursor').forEach( e => {
+        e.style.animation = 'none'
+        e.offsetHeight;
+        e.style.animation = null
+      });
+    }
+  }
+
+  backspace (sequence, callback) {
+    // setTimeout( () =>{
+      sequence.textNode.nodeValue = sequence.textNode.nodeValue.slice(0,-1);
+      if ( callback && callback instanceof Function ) {
+        callback();
+      }
+    // }, 500 );
   }
 
   misstype (sequence, callback) {
@@ -73,43 +90,51 @@ export default class Typewriter {
       let isUpperCase = trueChar === trueChar.toUpperCase();
       trueChar = trueChar.toLowerCase();
       if ( this.keyboard.join().indexOf(trueChar) >= 0 ) {
-        let keyboardLine = this.keyboard.filter( e => { return  e.indexOf(trueChar) >= 0 });
+        let keyboardLine = this.keyboard.filter( e => { return e.indexOf(trueChar) >= 0 });
         if ( keyboardLine.length ) {
           keyboardLine = keyboardLine[0];
           let letterPosition = keyboardLine.indexOf(trueChar.toLowerCase());
           let wrongChar = ((!letterPosition||letterPosition+1 === keyboardLine.length) ? keyboardLine[ letterPosition + (letterPosition ? -1:1)] : keyboardLine[letterPosition + (parseInt(Math.random()*100 % 2) ? 1 : -1)] );
           sequence.text.unshift( isUpperCase ? wrongChar.toUpperCase() : wrongChar);
+          return true;
         }
       }
     }
+    else {
+      return false;
+    }
 
-    return true;
   }
 
-  typeLetters (sequence, speed = this.speed) {
-    let misstyped = false;
+  typeLetter ( sequence, speed, callback ) {
+    setTimeout( () => {
+      sequence.textNode.nodeValue += sequence.text.shift();
+      if( callback && callback instanceof Function ) {
+        callback.call();
+      }
+    }, speed );
+  }
+
+  typeLetters (sequence, speed = this.speed, misstyped = false) {
     if ( this.humanize ) {
       speed = Math.abs(Math.random() * this.speed + this.speed/2);
       speed = Math.round(speed) % 2 && speed > this.speed / 0.25 ? this.speed / 2 : speed;
     }
-    if ( this.mistype && this.mistypeRate > Math.random() * 100 ) {
+    if ( this.mistype && !misstyped && this.mistypeRate > Math.random() * 100 ) {
       misstyped = this.misstype(sequence);
     }
-    setTimeout( () => {
-      if ( sequence.text.length ) {
-        sequence.textNode.nodeValue += sequence.text.shift();
-        this.typeLetters( sequence, speed );
-      } else if ( sequence.cursor ) {
-        sequence.cursor.classList.add('end');
-        if ( this.synchroniseCursors ) {
-          document.querySelectorAll('.typewriter-cursor').forEach( e => {
-            e.style.animation = 'none'
-            e.offsetHeight;
-            e.style.animation = null
-          });
-        }
+
+    speed = this.ignoreWhitespace && /\s/.test(sequence.text[0]) ? 0 : speed;
+    this.typeLetter( sequence, speed, () => {
+      if ( misstyped ) {
+        this.backspace( sequence );
       }
-    }, this.ignoreWhitespace && /\s/.test(sequence.text[0]) ? 0 : speed );
+      if ( sequence.text.length ) {
+        this.typeLetters(sequence, speed);
+      } else if ( sequence.cursor ) {
+          this.blinkCursor( sequence );
+        }
+    });
   }
 
   typeit() {
