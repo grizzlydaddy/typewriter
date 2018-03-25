@@ -10,8 +10,9 @@ export default class Typewriter {
     this.cursor = params.cursor;
     this.speed = params.speed / 2;
     this.humanize = params.humanize === undefined ? true : params.humanize;
-    this.mistype = params.mistype === undefined ? false : params.mistype;
-    this.mistypeRate = params.mistype === undefined ? 10 : params.mistypeRate;
+    this.mistyping = params.mistyping === undefined ? false : params.mistyping;
+    this.mistypingRate = params.mistypingRate === undefined ? 10 : params.mistypingRate;
+    this.mistyped = false;
     this.keyboard = params.keyboard === undefined ? keyboards['qwerty'] : keyboards[params.keyboard];
     this.fixePosition = params.fixePosition;
     this.text = params.text;
@@ -48,7 +49,7 @@ export default class Typewriter {
 
           .typewriter-cursor.end {
             opacity: 1;
-            animation: blink 1.2s infinite;
+            animation: blink 1s infinite;
           }`;
 
       let style = document.head.appendChild( document.createElement('style') );
@@ -76,15 +77,15 @@ export default class Typewriter {
   }
 
   backspace (sequence, callback) {
-    // setTimeout( () =>{
+    setTimeout( () =>{
       sequence.textNode.nodeValue = sequence.textNode.nodeValue.slice(0,-1);
       if ( callback && callback instanceof Function ) {
         callback();
       }
-    // }, 500 );
+    }, 500 );
   }
 
-  misstype (sequence, callback) {
+  mistype (sequence, callback) {
     let trueChar = sequence.text[0];
     if ( trueChar && !/\s/.test(trueChar) ) {
       let isUpperCase = trueChar === trueChar.toUpperCase();
@@ -96,14 +97,10 @@ export default class Typewriter {
           let letterPosition = keyboardLine.indexOf(trueChar.toLowerCase());
           let wrongChar = ((!letterPosition||letterPosition+1 === keyboardLine.length) ? keyboardLine[ letterPosition + (letterPosition ? -1:1)] : keyboardLine[letterPosition + (parseInt(Math.random()*100 % 2) ? 1 : -1)] );
           sequence.text.unshift( isUpperCase ? wrongChar.toUpperCase() : wrongChar);
-          return true;
+          this.mistyped = true;
         }
       }
     }
-    else {
-      return false;
-    }
-
   }
 
   typeLetter ( sequence, speed, callback ) {
@@ -115,22 +112,26 @@ export default class Typewriter {
     }, speed );
   }
 
-  typeLetters (sequence, speed = this.speed, misstyped = false) {
+  typeLetters (sequence, speed = this.speed, alreadyMistyped = false) {
     if ( this.humanize ) {
       speed = Math.abs(Math.random() * this.speed + this.speed/2);
       speed = Math.round(speed) % 2 && speed > this.speed / 0.25 ? this.speed / 2 : speed;
     }
-    if ( this.mistype && !misstyped && this.mistypeRate > Math.random() * 100 ) {
-      misstyped = this.misstype(sequence);
+    if ( this.mistyping && !alreadyMistyped && this.mistypingRate > Math.random() * 100 ) {
+      this.mistype(sequence);
     }
 
     speed = this.ignoreWhitespace && /\s/.test(sequence.text[0]) ? 0 : speed;
     this.typeLetter( sequence, speed, () => {
-      if ( misstyped ) {
-        this.backspace( sequence );
-      }
       if ( sequence.text.length ) {
-        this.typeLetters(sequence, speed);
+        if ( this.mistyped ) {
+          this.backspace(sequence, () => {
+            this.mistyped = false;
+            this.typeLetters(sequence, speed, true);
+          });
+        } else {
+          this.typeLetters(sequence, speed);
+        }
       } else if ( sequence.cursor ) {
           this.blinkCursor( sequence );
         }
