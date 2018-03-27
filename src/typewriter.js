@@ -159,12 +159,12 @@ export default class Typewriter {
           this.typeLetters(sequence, speed);
         }
       } else {
-          this.blinkCursor( sequence );
-          sequence.end = true;
-          if ( this.callback && this.callback instanceof Function && !this.retyped && this.sequences.every(e => e.end) ) {
-            this.callback.call(this);
-          }
+        sequence.end = true;
+        this.blinkCursor( sequence );
+        if ( this.callback && this.callback instanceof Function && !this.retyped && this.sequences.every(e => e.end) ) {
+          this.callback.call(this);
         }
+      }
     });
   }
 
