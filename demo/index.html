@@ -8,20 +8,23 @@
 
     <!-- <div class="typeMe" data-typeit="Hi ! Welcome into my workshop"></div>
     <div class="typeMe" data-typeit="I'm aright bro thx !"></div> -->
-    <div class="typeMe">Avec l'arrivée des premiers frimas, les insectes se préparent à la survie. Rassemblées dans un même abri, les coccinelles résistent grâce à une substance "antigel" présente dans leur sang. Chez les frelons, seules les femelles "fondatrices" hibernent. Grâce au nectar collecté, les abeilles ont des réserves pour l'hiver tandis que le papillon vulcain s'envole, lui, vers des cieux plus cléments.</div>
-    <div class="typeMe">Avec l'arrivée des premiers frimas, les insectes se préparent à la survie. Rassemblées dans un même abri, les coccinelles résistent grâce à une substance "antigel" présente dans leur sang. Chez les frelons, seules les femelles "fondatrices" hibernent. Grâce au nectar collecté, les abeilles ont des réserves pour l'hiver tandis que le papillon vulcain s'envole, lui, vers des cieux plus cléments.</div>
+    <div class="typeMe">Avec l'arrivée des premiers frimas, les insectes se préparent à la survie.</div>
+    <!-- <div class="typeMe">Avec l'arrivée des premiers frimas, les insectes se préparent à la survie. Rassemblées dans un même abri, les coccinelles résistent grâce à une substance "antigel" présente dans leur sang. Chez les frelons, seules les femelles "fondatrices" hibernent. Grâce au nectar collecté, les abeilles ont des réserves pour l'hiver tandis que le papillon vulcain s'envole, lui, vers des cieux plus cléments.</div> -->
 
     <script src="../lib/typewriter.js" charset="utf-8"></script>
     <script type="text/javascript">
 
       new Typewriter({
         target: '.typeMe',
-        speed: 50,
+        speed: 150,
         fixePosition: true,
         cursor: '|',
         mistyping: true,
+        keyboard: 'azerty',
         mistypingRate: 3,
-        keyboard: 'azerty'
+        callback: function() {
+          this.retype('Bravo les coccinelles !');
+        }
       });
 
     </script>

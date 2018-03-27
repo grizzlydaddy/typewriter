@@ -17,16 +17,19 @@ export default class Typewriter {
     this.text = params.text;
     this.ignoreWhitespace = params.ignoreWhitespace === undefined ? false : params.ignoreWhitespace;
     this.synchroniseCursors = params.synchroniseCursors === undefined ? true : params.synchroniseCursors;
-    this.writingSequences = this.setText();
+    this.callback = params.callback;
+    this.retyped = false;
+    this.writingSequences = [];
 
+    this.setText();
     this.typeit();
   }
 
   setText () {
-    return Array.from( document.querySelectorAll( '.typeMe'), e => {
+    this.writingSequences = Array.from( document.querySelectorAll( '.typeMe'), e => {
       return {
         target: e,
-        text: Array.from( ( e.dataset.typeit || this.text ) || e.textContent )
+        text: Array.from( ( this.text || e.dataset.typeit ) || e.textContent )
       }
     })
   }
@@ -104,6 +107,13 @@ export default class Typewriter {
     }
   }
 
+  retype (text) {
+    this.text = text;
+    this.setText();
+    this.retyped = true;
+    this.typeit();
+  }
+
   typeLetter (sequence, speed, callback) {
     setTimeout( () => {
       sequence.textNode.nodeValue += sequence.text.shift();
@@ -136,6 +146,9 @@ export default class Typewriter {
         }
       } else if ( sequence.cursor ) {
           this.blinkCursor( sequence );
+          if( this.callback && this.callback instanceof Function && !this.retyped ) {
+            this.callback.call(this);
+          }
         }
     });
   }
