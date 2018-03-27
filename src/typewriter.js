@@ -11,7 +11,7 @@ export default class Typewriter {
     this.speed = params.speed / 2;
     this.humanize = params.humanize === undefined ? true : params.humanize;
     this.mistyping = params.mistyping === undefined ? false : params.mistyping;
-    this.mistypingRate = params.mistypingRate === undefined ? 10 : params.mistypingRate;
+    this.mistypingRate = params.mistypingRate === undefined ? 3 : params.mistypingRate;
     this.keyboard = params.keyboard === undefined ? keyboards['qwerty'] : keyboards[params.keyboard];
     this.fixePosition = params.fixePosition;
     this.text = params.text;
@@ -24,15 +24,19 @@ export default class Typewriter {
     this.type();
   }
 
-  backspace (sequence, speed, callback) {
-    if( sequence.textNode.nodeValue.length ){
-      setTimeout( () =>{
-        sequence.textNode.nodeValue = sequence.textNode.nodeValue.slice(0,-1);
-        if ( callback && callback instanceof Function ) {
-          callback.call();
+  backspace (params) {
+    setTimeout( () =>{
+      params.sequence.textNode.nodeValue = params.sequence.textNode.nodeValue.slice(0,-1);
+      if( params.erase && params.sequence.textNode.nodeValue.length ) {
+        this.backspace( params );
+      }
+      else if ( params.callback && params.callback instanceof Function && ( !params.erase || this.sequences.every(e => e.erased)) )) {
+        params.sequence.erased = true;
+        params.callback.call();
+        if( !params.erase || (params.erase && this.sequences.every(e => e.erased)) ){
         }
-      }, speed || 500 );
-    }
+      }
+    }, params.speed || 500 );
   }
 
   blinkCursor (sequence) {
@@ -50,8 +54,11 @@ export default class Typewriter {
 
   erase (callback) {
     this.sequences.forEach( sequence => {
-        this.backspace( sequence, 1000, () => {
-          this.erase()
+        this.backspace({
+          sequence,
+          speed: 50,
+          erase: true,
+          callback
         });
     });
   }
@@ -151,9 +158,13 @@ export default class Typewriter {
     this.typeLetter( sequence, speed, () => {
       if ( sequence.text.length ) {
         if ( mistyped ) {
-          this.backspace(sequence, 500, () => {
-            this.mistyped = false;
-            this.typeLetters(sequence, speed, true);
+          this.backspace({
+            sequence,
+            speed: 500,
+            callback: () => {
+              this.mistyped = false;
+              this.typeLetters(sequence, speed, true);
+            }
           });
         } else {
           this.typeLetters(sequence, speed);

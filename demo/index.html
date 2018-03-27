@@ -16,16 +16,16 @@
 
       new Typewriter({
         target: '.typeMe',
-        speed: 50,
+        speed: 100,
         fixePosition: true,
         cursor: '|',
-        // mistyping: true,
+        mistyping: true,
         keyboard: 'azerty',
-        mistypingRate: 3,
+        mistypingRate: 5,
         callback: function() {
-          console.log('end');
-          // this.retype('Bravo les coccinelles !');
-          this.erase();
+          this.erase( () => {
+            console.log( 'erasing done' );
+          });
         }
       });
 
