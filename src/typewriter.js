@@ -12,7 +12,6 @@ export default class Typewriter {
     this.humanize = params.humanize === undefined ? true : params.humanize;
     this.mistyping = params.mistyping === undefined ? false : params.mistyping;
     this.mistypingRate = params.mistypingRate === undefined ? 10 : params.mistypingRate;
-    this.mistyped = false;
     this.keyboard = params.keyboard === undefined ? keyboards['qwerty'] : keyboards[params.keyboard];
     this.fixePosition = params.fixePosition;
     this.text = params.text;
@@ -65,7 +64,7 @@ export default class Typewriter {
     }
   }
 
-  blinkCursor ( sequence ) {
+  blinkCursor (sequence) {
     sequence.cursor.classList.add('end');
     if ( this.synchroniseCursors ) {
       document.querySelectorAll('.typewriter-cursor').forEach( e => {
@@ -97,13 +96,15 @@ export default class Typewriter {
           let letterPosition = keyboardLine.indexOf(trueChar.toLowerCase());
           let wrongChar = ((!letterPosition||letterPosition+1 === keyboardLine.length) ? keyboardLine[ letterPosition + (letterPosition ? -1:1)] : keyboardLine[letterPosition + (parseInt(Math.random()*100 % 2) ? 1 : -1)] );
           sequence.text.unshift( isUpperCase ? wrongChar.toUpperCase() : wrongChar);
-          this.mistyped = true;
+          return true;
         }
       }
+    } else {
+      return false;
     }
   }
 
-  typeLetter ( sequence, speed, callback ) {
+  typeLetter (sequence, speed, callback) {
     setTimeout( () => {
       sequence.textNode.nodeValue += sequence.text.shift();
       if( callback && callback instanceof Function ) {
@@ -113,18 +114,19 @@ export default class Typewriter {
   }
 
   typeLetters (sequence, speed = this.speed, alreadyMistyped = false) {
+    let mistyped = false;
     if ( this.humanize ) {
       speed = Math.abs(Math.random() * this.speed + this.speed/2);
       speed = Math.round(speed) % 2 && speed > this.speed / 0.25 ? this.speed / 2 : speed;
     }
     if ( this.mistyping && !alreadyMistyped && this.mistypingRate > Math.random() * 100 ) {
-      this.mistype(sequence);
+      mistyped = this.mistype(sequence);
     }
 
     speed = this.ignoreWhitespace && /\s/.test(sequence.text[0]) ? 0 : speed;
     this.typeLetter( sequence, speed, () => {
       if ( sequence.text.length ) {
-        if ( this.mistyped ) {
+        if ( mistyped ) {
           this.backspace(sequence, () => {
             this.mistyped = false;
             this.typeLetters(sequence, speed, true);
