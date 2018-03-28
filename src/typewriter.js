@@ -30,10 +30,14 @@ export default class Typewriter {
       if( params.erase && params.sequence.textNode.nodeValue.length ) {
         this.backspace( params );
       }
-      else if ( params.callback && params.callback instanceof Function && ( !params.erase || this.sequences.every(e => e.erased)) )) {
-        params.sequence.erased = true;
-        params.callback.call();
-        if( !params.erase || (params.erase && this.sequences.every(e => e.erased)) ){
+      else if ( params.callback && params.callback instanceof Function ) {
+        if( !params.erase ){
+          params.callback.call();
+        } else if( !params.sequence.textNode.nodeValue.length ) {
+          params.sequence.erased = true;
+          if( this.sequences.every(e => e.erased) ) {
+            params.callback.call();
+          }
         }
       }
     }, params.speed || 500 );
@@ -52,13 +56,13 @@ export default class Typewriter {
     }
   }
 
-  erase (callback) {
+  erase (params) {
     this.sequences.forEach( sequence => {
         this.backspace({
           sequence,
-          speed: 50,
+          speed: params.speed === undefined ? 30 : params.speed,
           erase: true,
-          callback
+          callback: params.callback
         });
     });
   }
@@ -73,7 +77,10 @@ export default class Typewriter {
         if ( keyboardLine.length ) {
           keyboardLine = keyboardLine[0];
           let letterPosition = keyboardLine.indexOf(trueChar.toLowerCase());
-          let wrongChar = ((!letterPosition||letterPosition+1 === keyboardLine.length) ? keyboardLine[ letterPosition + (letterPosition ? -1:1)] : keyboardLine[letterPosition + (parseInt(Math.random()*100 % 2) ? 1 : -1)] );
+          // IF first or last letter of the line
+          // THEN wrongChar = first letter +1 or last letter -1 (ex: if q then w or if n then b)
+          // ELSE wrongChar = sibbling letter (ex: if t then r or y)
+          let wrongChar = ((!letterPosition||letterPosition+1 === keyboardLine.length) ? keyboardLine[ letterPosition + (letterPosition ? -1:1)] : keyboardLine[letterPosition + (Math.round(Math.random()) ? 1 : -1)] );
           sequence.text.unshift( isUpperCase ? wrongChar.toUpperCase() : wrongChar);
           return true;
         }
@@ -83,10 +90,17 @@ export default class Typewriter {
     }
   }
 
-  retype (text) {
-    this.text = text;
+  retype ( params ) {
+    this.text = params.text;
     this.retyped = true;
-    this.type();
+    if( params.eraseBefore ){
+      this.erase({
+        callback: () => this.type(),
+        speed: params.eraseSpeed
+      });
+    } else {
+      this.type()
+    }
   }
 
   setCursor (target) {
@@ -120,6 +134,11 @@ export default class Typewriter {
     } else {
       return;
     }
+  }
+
+  getCursor () {
+    let cursors = this.sequences.map( e => e.cursor );
+    return cursors.length > 1 ? cursors : cursors[0];
   }
 
   setSequences () {
