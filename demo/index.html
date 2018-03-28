@@ -9,25 +9,33 @@
     <!-- <div class="typeMe" data-typeit="Hi ! Welcome into my workshop"></div>
     <div class="typeMe" data-typeit="I'm aright bro thx !"></div> -->
     <div class="typeMe">Avec l'arrivée des premiers frimas, les insectes se préparent à la survie.</div>
-    <div class="typeMe">Avec l'arrivée des premiers frimas</div>
+    <!-- <div class="typeMe">Avec l'arrivée des premiers frimas</div> -->
 
     <script src="../lib/typewriter.js" charset="utf-8"></script>
     <script type="text/javascript">
 
-      new Typewriter({
+      let typed = new Typewriter({
         target: '.typeMe',
-        speed: 100,
+        speed: 150,
         fixePosition: true,
         cursor: '|',
         mistyping: true,
         keyboard: 'azerty',
-        mistypingRate: 5,
+        mistypingRate: 2,
         callback: function() {
-          this.erase( () => {
-            console.log( 'erasing done' );
+          this.erase({
+            callback: () => {
+              this.retype({
+                text: 'Bravo les coccinelles !',
+                eraseBefore: true,
+                eraseSpeed: 1000
+              });
+            }
           });
         }
       });
+
+      console.log( typed.getCursor() );
 
     </script>
   </body>
