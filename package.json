@@ -2,7 +2,7 @@
   "name": "typograph",
   "version": "1.0.0",
   "description": "A compliant JavaScript typing animation library.",
-  "main": "typograph.js",
+  "main": "lib/typograph.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack --mode development --watch",
@@ -16,7 +16,7 @@
   "keywords": [
     "animation",
     "type",
-    "typewriter"
+    "typewriter",
     "typewriting",
     "typing",
     "writing"
