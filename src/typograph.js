@@ -142,8 +142,8 @@ export default class Typograph {
   }
 
   setSequences () {
-    this.sequences = Array.from( document.querySelectorAll( '.typeMe'), e => {
-      let text = Array.from( ( this.text || e.dataset.type ) || e.textContent );
+    this.sequences = Array.from( document.querySelectorAll(this.target), e => {
+      let text = Array.from( ( this.text || e.dataset.typeit ) || e.textContent );
       e.innerText = null;
       return {
         target: e,
@@ -151,12 +151,12 @@ export default class Typograph {
         cursor: this.setCursor( e ),
         text
       }
-    })
+    });
   }
 
   typeLetter (sequence, speed, callback) {
     setTimeout( () => {
-      sequence.textNode.nodeValue += sequence.text.shift();
+      sequence.textNode.nodeValue += sequence.text.shift() || '';
       if( callback && callback instanceof Function ) {
         callback.call();
       }
