@@ -1,8 +1,8 @@
 {
-  "name": "typewriter",
+  "name": "typograph",
   "version": "1.0.0",
   "description": "Typing animations",
-  "main": "typewriter.js",
+  "main": "typograph.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack --mode development --watch",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/grizzlydaddy/typewriter.git"
+    "url": "git+https://github.com/grizzlydaddy/typograph.git"
   },
   "keywords": [
     "Typing",
@@ -21,9 +21,9 @@
   "author": "mgrisole",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/grizzlydaddy/typewriter/issues"
+    "url": "https://github.com/grizzlydaddy/typograph/issues"
   },
-  "homepage": "https://github.com/grizzlydaddy/typewriter#readme",
+  "homepage": "https://github.com/grizzlydaddy/typograph#readme",
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.4",

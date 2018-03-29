@@ -1,14 +1,14 @@
 const path = require('path');
 
 module.exports = {
-  entry: './src/typewriter.js',
+  entry: './src/typograph.js',
   output: {
     path: path.resolve(__dirname, 'lib/'),
-    library: 'Typewriter',
-    filename: 'typewriter.js',
+    library: 'Typograph',
+    filename: 'typograph.js',
     libraryTarget: 'umd',
     libraryExport: 'default',
-    sourceMapFilename: '../maps/typewriter.js.map'
+    sourceMapFilename: '../maps/typograph.js.map'
   },
   devtool: "source-map",
   externals: [

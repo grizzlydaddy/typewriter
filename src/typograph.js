@@ -3,7 +3,7 @@ let keyboards = {
   qwerty: ['qwertyuiop', 'asdfghjklz', 'xcvbnm']
 };
 
-export default class Typewriter {
+export default class Typograph {
 
   constructor(params) {
     this.target = params.target;
