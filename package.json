@@ -1,6 +1,6 @@
 {
   "name": "typograph",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A compliant JavaScript typing animation library.",
   "main": "lib/typograph.js",
   "scripts": {
