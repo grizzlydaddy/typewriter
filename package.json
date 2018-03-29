@@ -1,7 +1,7 @@
 {
   "name": "typograph",
   "version": "1.0.0",
-  "description": "Typing animations",
+  "description": "A compliant JavaScript typing animation library.",
   "main": "typograph.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -14,9 +14,12 @@
     "url": "git+https://github.com/grizzlydaddy/typograph.git"
   },
   "keywords": [
-    "Typing",
-    "Writing",
-    "Animation"
+    "animation",
+    "type",
+    "typewriter"
+    "typewriting",
+    "typing",
+    "writing"
   ],
   "author": "mgrisole",
   "license": "ISC",
