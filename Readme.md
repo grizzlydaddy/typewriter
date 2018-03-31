@@ -15,7 +15,6 @@ import Typograph from 'typograph'
 ## Usage
 
 ```javascript
-
 new Typograph({
   target: '.typeMe',
   text: 'Type me if you can',

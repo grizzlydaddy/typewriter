@@ -7,11 +7,8 @@
   <body style="background: #324350; color: white">
 
     <div class="typeMe" data-typeit="Hi ! Welcome into my workshop"></div>
-    <div class="typeMe" data-typeit="I'm aright bro thx !"></div>
-    <div class="typeMe">Avec l'arrivée des premiers frimas, les insectes se préparent à la survie.</div>
-    <!-- <div class="typeMe">Avec l'arrivée des premiers frimas</div> -->
 
-    <script src="../lib/typograph.js" charset="utf-8"></script>
+    <script src="../lib/typograph.min.js" charset="utf-8"></script>
     <script type="text/javascript">
 
       let typed = new Typograph({
@@ -26,7 +23,7 @@
           this.erase({
             callback: () => {
               this.retype({
-                text: 'Bravo les coccinelles !',
+                text: 'Thanks mate',
                 eraseBefore: true,
                 eraseSpeed: 1000
               });

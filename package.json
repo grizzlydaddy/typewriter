@@ -2,9 +2,8 @@
   "name": "typograph",
   "version": "1.0.3",
   "description": "A compliant JavaScript typing animation library.",
-  "main": "lib/typograph.js",
+  "main": "lib/typograph.min.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack --mode development --watch",
     "build": "webpack --mode production",
     "start": "webpack-dev-server"
@@ -31,7 +30,9 @@
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.6.1",
+    "google-closure-compiler-js": "^20180319.0.0",
     "uglifyjs-webpack-plugin": "^1.2.4",
+    "unminified-webpack-plugin": "^2.0.0",
     "webpack": "^4.1.1",
     "webpack-cli": "^2.0.11"
   },
