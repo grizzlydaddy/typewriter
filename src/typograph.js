@@ -7,7 +7,7 @@ export default class Typograph {
 
   constructor(params) {
     this.target = params.target;
-    this.cursor = params.cursor;
+    this.cursor = params.cursor ;
     this.speed = params.speed / 2;
     this.humanize = params.humanize === undefined ? true : params.humanize;
     this.mistyping = params.mistyping === undefined ? false : params.mistyping;

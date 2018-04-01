@@ -2,8 +2,9 @@
   "presets": [
     ["env", {
       "targets": {
-        "browsers": ["last 2 versions", "safari >= 7", "Explorer >= 10"]
+        "browsers": ["chrome >=24", "safari >= 6", "Explorer >= 10", "firefox >= 32", "Opera >= 15"]
       }
     }]
-  ]
+  ],
+  "plugins": ["transform-runtime"]
 }

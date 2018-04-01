@@ -1,5 +1,17 @@
 # Typograph
-A compliant JavaScript typing animation library.
+
+
+## Overview
+Typographis a pure JavaScript module which allows you to simulate a typewriter effect on any text or group of text you want.
+It offers a bunch of options from classic one as typing/backspacing speed, humanized speed etc. to some you won't find easily elsewhere like simulating misstyping or retyping.
+You can of course use it in its simplest form by only setting you own selectors in target.
+
+## Browser support
+
+| Chrome | Safari | IE / Edge | Firefox | Opera |
+| --- | --- | --- | --- | --- |
+| 24+ | 6+ | 10+ | 32+ | 15+ |
+
 
 ## Installation
 
@@ -16,20 +28,20 @@ import Typograph from 'typograph'
 
 ```javascript
 new Typograph({
-  target: '.typeMe',
-  text: 'Type me if you can',
-  speed: 150,
-  fixePosition: true,
-  cursor: '|',
-  mistyping: true,
-  mistypingRate: 2,
-  callback: function() {
+  target: '.typeMe',                  // Mandatory
+  text: 'Type me if you can',         // Optional
+  speed: 150,                         // Optional
+  fixePosition: true,                 // Optional
+  cursor: '|',                        // Optional
+  mistyping: true,                    // Optional
+  mistypingRate: 2,                   // Optional
+  callback: function() {              // Optional
     this.erase({
       callback: () => {
         this.retype({
-          text: 'Well done !',
-          eraseBefore: true,
-          eraseSpeed: 50
+          text: 'Well done !',        // Mandatory
+          eraseBefore: true,          // Optional
+          eraseSpeed: 50              // Optional
         });
       }
     });
