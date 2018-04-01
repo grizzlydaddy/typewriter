@@ -47,24 +47,24 @@ export default class Typograph {
     if ( sequence.cursor ) {
       sequence.cursor.classList.add('end');
       if ( this.synchroniseCursors ) {
-        document.querySelectorAll('.typewriter-cursor').forEach( e => {
+        for( const e  of document.querySelectorAll('.typewriter-cursor') ) {
           e.style.animation = 'none'
           e.offsetHeight;
           e.style.animation = null
-        });
+        }
       }
     }
   }
 
   erase (params) {
-    this.sequences.forEach( sequence => {
+    for ( const sequence of this.sequences ) {
         this.backspace({
           sequence,
           speed: params.speed === undefined ? 30 : params.speed,
           erase: true,
           callback: params.callback
         });
-    });
+    }
   }
 
   mistype (sequence, callback) {
@@ -144,7 +144,7 @@ export default class Typograph {
   setSequences () {
     this.sequences = Array.from( document.querySelectorAll(this.target), e => {
       let text = Array.from( ( this.text || e.dataset.typeit ) || e.textContent );
-      e.innerText = null;
+      e.innerText = '';
       return {
         target: e,
         textNode: e.appendChild( document.createTextNode('') ),
@@ -200,7 +200,9 @@ export default class Typograph {
 
   type() {
     this.setSequences();
-    this.sequences.forEach( sequence => this.typeLetters(sequence) );
+    for ( const sequence of this.sequences ) {
+      this.typeLetters(sequence);
+    }
   }
 }
 {{}}
