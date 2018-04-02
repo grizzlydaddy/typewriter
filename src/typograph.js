@@ -36,7 +36,7 @@ export default class Typograph {
         } else if( !params.sequence.textNode.nodeValue.length ) {
           params.sequence.erased = true;
           if( this.sequences.every(e => e.erased) ) {
-            params.callback.call();
+            params.callback.call(this);
           }
         }
       }
@@ -47,10 +47,10 @@ export default class Typograph {
     if ( sequence.cursor ) {
       sequence.cursor.classList.add('end');
       if ( this.synchroniseCursors ) {
-        for( const e  of document.querySelectorAll('.typewriter-cursor') ) {
-          e.style.animation = 'none'
+        for ( const e of document.querySelectorAll('.typewriter-cursor') ) {
+          e.classList.remove('end');
           e.offsetHeight;
-          e.style.animation = null
+          e.classList.add('end');
         }
       }
     }
@@ -90,7 +90,7 @@ export default class Typograph {
     }
   }
 
-  retype ( params ) {
+  retype (params) {
     this.text = params.text;
     this.retyped = true;
     if( params.eraseBefore ){

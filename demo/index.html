@@ -20,15 +20,15 @@
         keyboard: 'azerty',
         mistypingRate: 2,
         callback: function() {
-          // this.erase({
-          //   callback: () => {
-          //     this.retype({
-          //       text: 'Thanks mate',
-          //       eraseBefore: true,
-          //       eraseSpeed: 1000
-          //     });
-          //   }
-          // });
+          this.erase({
+            callback: function() {
+              this.retype({
+                text: 'Thanks mate',
+                eraseBefore: true,
+                eraseSpeed: 1000
+              });
+            }
+          });
         }
       });
 
