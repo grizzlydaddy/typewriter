@@ -106,7 +106,8 @@ export default class Typograph {
   setCursor (target) {
     if ( this.cursor ) {
 
-      let cursorStyle = `
+      if ( !document.querySelectorAll('.typograph_cursor').length ) {
+        let cursorStyle = `
           @keyframes blink {
             0% {
               opacity: 0 }
@@ -123,9 +124,11 @@ export default class Typograph {
             animation: blink 1s infinite;
           }`;
 
-      let style = document.head.appendChild( document.createElement('style') );
-      style.type = 'text/css';
-      style.appendChild( document.createTextNode(cursorStyle) );
+        let style = document.head.appendChild( document.createElement('style') );
+        style.type = 'text/css';
+        style.className = 'typograph_cursor';
+        style.appendChild( document.createTextNode(cursorStyle) );
+      }
 
       let cursor = target.appendChild( document.createElement('span') );
       cursor.textContent = this.cursor;
