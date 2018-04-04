@@ -8,14 +8,14 @@ export default class Typograph {
     this.target = params.target;
     this.cursor = params.cursor;
     this.speed = params.speed / 2;
-    this.humanize = params.humanize === undefined ? true : params.humanize;
+    this.humanize = params.humanize || true;
     this.mistyping = params.mistyping === undefined ? false : params.mistyping;
     this.mistypingRate = params.mistypingRate === undefined ? 3 : params.mistypingRate;
     this.keyboard = params.keyboard === undefined ? keyboards.qwerty : keyboards[params.keyboard];
     this.fixePosition = params.fixePosition;
     this.text = params.text;
     this.ignoreWhitespace = params.ignoreWhitespace === undefined ? false : params.ignoreWhitespace;
-    this.synchroniseCursors = params.synchroniseCursors === undefined ? true : params.synchroniseCursors;
+    this.synchroniseCursors = params.synchroniseCursors || true;
     this.callback = params.callback;
     this.retyped = false;
     this.sequences = [];
@@ -24,15 +24,15 @@ export default class Typograph {
   }
 
   backspace(params) {
-    const sequence = params.sequence;
+    const { sequence } = params;
     setTimeout(() => {
-      sequence.textNode.nodeValue = params.sequence.textNode.nodeValue.slice(0, -1);
-      if (params.erase && params.sequence.textNode.nodeValue.length) {
+      sequence.textNode.nodeValue = sequence.textNode.nodeValue.slice(0, -1);
+      if (params.erase && sequence.textNode.nodeValue.length) {
         this.backspace(params);
       } else if (params.callback instanceof Function) {
         if (!params.erase) {
           params.callback.call();
-        } else if (!params.sequence.textNode.nodeValue.length) {
+        } else if (!sequence.textNode.nodeValue.length) {
           sequence.erased = true;
           if (this.sequences.every(e => e.erased)) {
             params.callback.call(this);
@@ -46,9 +46,8 @@ export default class Typograph {
     if (sequence.cursor) {
       sequence.cursor.classList.add('end');
       if (this.synchroniseCursors) {
-        document.querySelectorAll('.typewriter-cursor').forEach((e) => {
+        Array.from(document.querySelectorAll('.typewriter-cursor')).forEach((e) => {
           e.classList.remove('end');
-          e.offsetHeight;
           e.classList.add('end');
         });
       }
@@ -73,11 +72,13 @@ export default class Typograph {
       if (this.keyboard.join().indexOf(trueChar) >= 0) {
         const [keyboardLine] = this.keyboard.filter(e => e.indexOf(trueChar) >= 0);
         const letterPosition = keyboardLine.indexOf(trueChar.toLowerCase());
+        // wrongChar = sibbling letter (ex: if t then r or y)
         // IF first or last letter of the line
         // THEN wrongChar = first letter +1 or last letter -1 (ex: if q then w or if n then b)
-        // ELSE wrongChar = sibbling letter (ex: if t then r or y)
-        const isBorderLetter = !letterPosition || letterPosition + 1 === keyboardLine.length;
-        const wrongChar = isBorderLetter ? keyboardLine[letterPosition + (letterPosition ? -1 : 1)] : keyboardLine[letterPosition + (Math.round(Math.random()) ? 1 : -1)];
+        let wrongChar = keyboardLine[letterPosition + (Math.round(Math.random()) ? 1 : -1)];
+        if (!letterPosition || letterPosition + 1 === keyboardLine.length) {
+          wrongChar = keyboardLine[letterPosition + (letterPosition ? -1 : 1)];
+        }
         sequence.text.unshift(isUpperCase ? wrongChar.toUpperCase() : wrongChar);
         mistyped = true;
       }
@@ -147,7 +148,7 @@ export default class Typograph {
     });
   }
 
-  static typeLetter(sequence, speed, callback) {
+  typeLetter(sequence, speed, callback) {
     setTimeout(() => {
       sequence.textNode.nodeValue += sequence.text.shift() || '';
       if (callback instanceof Function) {
@@ -157,17 +158,18 @@ export default class Typograph {
   }
 
   typeLetters(sequence, speed = this.speed, alreadyMistyped = false) {
+    let newSpeed = speed;
     let mistyped = false;
     if (this.humanize) {
-      speed = Math.abs(((Math.random() * this.speed) + this.speed) / 2);
-      speed = Math.round(speed) % 2 && speed > this.speed / 0.25 ? this.speed / 2 : speed;
+      newSpeed = Math.round(((Math.random() * this.speed) + this.speed) / 2);
+      newSpeed = newSpeed % 2 && newSpeed > this.speed / 0.25 ? this.speed / 2 : newSpeed;
     }
     if (this.mistyping && !alreadyMistyped && this.mistypingRate > Math.random() * 100) {
       mistyped = this.mistype(sequence);
     }
 
-    speed = this.ignoreWhitespace && /\s/.test(sequence.text[0]) ? 0 : speed;
-    this.typeLetter(sequence, speed, () => {
+    newSpeed = this.ignoreWhitespace && /\s/.test(sequence.text[0]) ? 0 : newSpeed;
+    this.typeLetter(sequence, newSpeed, () => {
       if (sequence.text.length) {
         if (mistyped) {
           this.backspace({
@@ -175,11 +177,11 @@ export default class Typograph {
             speed: 500,
             callback: () => {
               this.mistyped = false;
-              this.typeLetters(sequence, speed, true);
+              this.typeLetters(sequence, newSpeed, true);
             },
           });
         } else {
-          this.typeLetters(sequence, speed);
+          this.typeLetters(sequence, newSpeed);
         }
       } else {
         sequence.end = true;
@@ -197,4 +199,3 @@ export default class Typograph {
     this.sequences.forEach(sequence => this.typeLetters(sequence));
   }
 }
-{{}}
