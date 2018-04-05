@@ -24,6 +24,12 @@ $ yarn add typograph
 import Typograph from 'typograph'
 ```
 
+Or manually [download](https://github.com/grizzlydaddy/typograph/archive/master.zip) and link lib/typograph.min.js in your HTML:
+
+```javascript
+<script src="typograph.min.js"></script>
+```
+
 ## Usage
 
 ```javascript

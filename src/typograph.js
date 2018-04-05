@@ -148,28 +148,19 @@ export default class Typograph {
     });
   }
 
-  typeLetter(sequence, speed, callback) {
-    setTimeout(() => {
-      sequence.textNode.nodeValue += sequence.text.shift() || '';
-      if (callback instanceof Function) {
-        callback.call();
-      }
-    }, speed);
-  }
-
   typeLetters(sequence, speed = this.speed, alreadyMistyped = false) {
-    let newSpeed = speed;
     let mistyped = false;
     if (this.humanize) {
-      newSpeed = Math.round(((Math.random() * this.speed) + this.speed) / 2);
-      newSpeed = newSpeed % 2 && newSpeed > this.speed / 0.25 ? this.speed / 2 : newSpeed;
+      speed = Math.round(((Math.random() * this.speed) + this.speed) / 2);
+      speed = speed % 2 && speed > this.speed / 0.25 ? this.speed / 2 : speed;
     }
     if (this.mistyping && !alreadyMistyped && this.mistypingRate > Math.random() * 100) {
       mistyped = this.mistype(sequence);
     }
 
-    newSpeed = this.ignoreWhitespace && /\s/.test(sequence.text[0]) ? 0 : newSpeed;
-    this.typeLetter(sequence, newSpeed, () => {
+    speed = this.ignoreWhitespace && /\s/.test(sequence.text[0]) ? 0 : speed;
+    setTimeout(() => {
+      sequence.textNode.nodeValue += sequence.text.shift() || '';
       if (sequence.text.length) {
         if (mistyped) {
           this.backspace({
@@ -177,11 +168,11 @@ export default class Typograph {
             speed: 500,
             callback: () => {
               this.mistyped = false;
-              this.typeLetters(sequence, newSpeed, true);
+              this.typeLetters(sequence, speed, true);
             },
           });
         } else {
-          this.typeLetters(sequence, newSpeed);
+          this.typeLetters(sequence, speed);
         }
       } else {
         sequence.end = true;
@@ -191,7 +182,7 @@ export default class Typograph {
           this.callback.call(this);
         }
       }
-    });
+    }, speed);
   }
 
   type() {
