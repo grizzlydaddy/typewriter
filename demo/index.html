@@ -7,9 +7,6 @@
   <body style="background: #324350; color: white">
 
     <div class="typeMe" data-typeit="Hi ! Welcome in my workshop"></div>
-    <div class="typeMe" data-typeit="Hi ! Welcome in my workshop"></div>
-    <div class="typeMe" data-typeit="Hi ! Welcome in my workshop"></div>
-    <div class="typeMe" data-typeit="Hi ! Welcome in my workshop"></div>
 
     <script src="../lib/typograph.min.js" charset="utf-8"></script>
     <script type="text/javascript">
@@ -19,19 +16,19 @@
         speed: 300,
         fixePosition: true,
         cursor: '|',
-        // mistyping: true,
+        mistyping: true,
         keyboard: 'azerty',
         mistypingRate: 5,
         callback: function() {
-          // this.erase({
-          //   callback: function() {
-          //     this.retype({
-          //       text: 'Thanks mate',
-          //       eraseBefore: true,
-          //       eraseSpeed: 1000
-          //     });
-          //   }
-          // });
+          this.erase({
+            callback: function() {
+              this.retype({
+                text: 'Thanks mate !',
+                eraseBefore: true,
+                eraseSpeed: 1000
+              });
+            }
+          });
         }
       });
 

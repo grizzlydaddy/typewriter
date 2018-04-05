@@ -2,7 +2,7 @@
   "name": "typograph",
   "version": "1.0.9",
   "description": "A compliant JavaScript typing animation library.",
-  "main": "lib/typograph.min.js",
+  "main": "src/typograph.js",
   "scripts": {
     "dev": "webpack --mode development --watch",
     "build": "webpack --mode production",
@@ -40,6 +40,7 @@
     "webpack-cli": "^2.0.11"
   },
   "files": [
+    "src",
     "lib"
   ],
   "dependencies": {}

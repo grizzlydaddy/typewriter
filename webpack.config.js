@@ -1,5 +1,4 @@
 const path = require('path');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const UnminifiedWebpackPlugin = require('unminified-webpack-plugin');
 
 module.exports = {
@@ -10,29 +9,29 @@ module.exports = {
     filename: 'typograph.min.js',
     libraryTarget: 'umd',
     libraryExport: 'default',
-    sourceMapFilename: '../maps/typograph.js.map'
+    sourceMapFilename: '../maps/typograph.js.map',
   },
-  devtool: "source-map",
+  devtool: 'source-map',
   externals: [
     {
       lodash: {
         root: '_',
         commonjs: 'lodash',
         commonjs2: 'lodash',
-        amd: 'lodash'
-      }
-    }
+        amd: 'lodash',
+      },
+    },
   ],
   module: {
     rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: ['babel-loader']
-      }
-    ]
+        use: ['babel-loader'],
+      },
+    ],
   },
   plugins: [
-    new UnminifiedWebpackPlugin()
-  ]
+    new UnminifiedWebpackPlugin(),
+  ],
 };
