@@ -186,7 +186,6 @@ export default class Typograph {
   }
 
   type() {
-    console.log('Typograph debug', 'Flag');
     this.setSequences();
     this.sequences.forEach(sequence => this.typeLetters(sequence));
   }
