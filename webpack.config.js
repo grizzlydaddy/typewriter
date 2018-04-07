@@ -32,6 +32,12 @@ module.exports = {
     ],
   },
   plugins: [
-    new UnminifiedWebpackPlugin(),
+    new UnminifiedWebpackPlugin({
+      uglifyOptions: {
+        output: {
+          comments: false,
+        },
+      },
+    }),
   ],
 };
